@@ -1,17 +1,30 @@
-# Plate Recognition
-Model based on OCR KERAS model for a car plate text extraction, the plates
-are formated on the Ecuadorian format of car plates.
+# PARCA
+Flask server with some utils for servidn tensorflow models.
+
+# Structure
+
+    /
+        models                  # Folder to storage copied models.
+        src/
+            flask_server/       # Flask server init configuration
+            utils/              # Utility methods for management of models
+        tensorflow-serve.sh     # Command for start docker iamges of tensorflow server
 
 # Usage
 
-Init training
-`python3 main.py train`
+Copy model exported folders by save model and variables of tensorflow.
+`python3 main.py --copy-model [model_folder_path] --name [model_name]`
 
-Test model
-`python3 main.py [epoch_number]`
-* The epoch number has to be ## number format. Ex. 12 or 07
+Create protobuff configuration for multiple models over tensorflow-serve
+`python3 main.py --generate-config`
 
+Create protobuff configuration for multiple models over tensorflow-serve, with an specific path
+usefull with docker images.
+`python3 main.py --generate-config-path [path]`
+
+Run flask server
+`python3 main.py --serve`
 
 # References
 
-Keras OCR [https://github.com/keras-team/keras/blob/master/examples/image_ocr.py]
+Tensorflow Serve [https://www.tensorflow.org/tfx/serving/serving_basic]
