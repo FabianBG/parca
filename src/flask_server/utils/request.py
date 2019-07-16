@@ -11,5 +11,5 @@ def allowed_file(filename):
 
 def generate_request(model_name, payload):
     r = requests.post(config['TENSORFLOW_SERVE_URL'] + model_name, json=payload)
-    return json.loads(r.content.decode('utf-8'))
+    return r.content.decode('utf-8')
     

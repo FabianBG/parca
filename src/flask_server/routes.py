@@ -3,24 +3,30 @@ from src.flask_server.utils.request import allowed_file, generate_request
 from src.flask_server.models.ocr_plate import decode_batch, generate_input, __MODEL_NAME__
 import uuid
 import os
+from src.flask_server.utils.images import simple_image_handler
 
 model_routes = Blueprint('model_routes', __name__)
-version = '/v1/'
 
-
-@model_routes.route(version + 'ocr_plate', methods=['POST'])
-def ocr_plate_predict():
+@model_routes.route('/api', methods=['POST'])
+def make_file_predict():
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
+    if 'model' not in request.form:
+        flash('No model definition')
+        return redirect(request.url)
     file = request.files['file']
+    print("Executing ::::::", request.form['model'])
+    model = request.form['model']
     if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        path = os.path.join('./',  __MODEL_NAME__ + str(uuid.uuid1()))
+        path = os.path.join('./',  model + str(uuid.uuid1()))
         file.save(path)
-        payload = generate_input(path)
-        pred = generate_request(__MODEL_NAME__, payload)
+        data = simple_image_handler(path, (96, 96))
+        payload = generate_input(path, data)
+        pred = generate_request(model, payload)
         os.remove(path)
-        return jsonify(decode_batch(pred['outputs']))
+        print("Response ::::::", pred['outputs'])
+        return jsonify(pred['outputs'])
