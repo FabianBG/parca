@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, request, redirect, jsonify
 from src.flask_server.utils.request import allowed_file, generate_request
-from src.flask_server.models.ocr_plate import decode_batch, generate_input, __MODEL_NAME__
+from src.flask_server.models.mnist_fashion import decode_output, generate_input
 import uuid
 import os
 from src.flask_server.utils.images import simple_image_handler
@@ -28,5 +28,6 @@ def make_file_predict():
         payload = generate_input(path, data)
         pred = generate_request(model, payload)
         os.remove(path)
-        print("Response ::::::", pred['outputs'])
-        return jsonify(pred['outputs'])
+        pretty_response = decode_output(pred['outputs'][0])
+        print("Response ::::::", pred, pretty_response)
+        return jsonify(pretty_response)

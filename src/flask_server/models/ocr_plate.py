@@ -29,8 +29,14 @@ def decode_batch(out):
         ret.append(outstr)
     return ret
 
-def generate_input(path, input_data):
+def generate_input(path, size=(200, 50)):
+    img = Image.open(path).resize(size)
+    img = np.array(img.convert('L'))
+    img = img.astype(np.float32) / 255
+    img = np.expand_dims(img, 0)
+    x = np.ones([1, 200, 50, 1])
+    x[0, 0:200, :, 0] = img[0, :, :].T
     return {
         "signature_name": "predict",
-        "inputs": np.array(input_data).tolist() 
+        "inputs": x.tolist()
     }
