@@ -1,9 +1,8 @@
 from flask import Blueprint, flash, request, redirect, jsonify
 from src.flask_server.utils.request import allowed_file, generate_request
-from src.flask_server.models.mnist_fashion import decode_output, generate_input
+from src.flask_server.models.mnist_fashion import decode_output, generate_input, preprocess_image
 import uuid
 import os
-from src.flask_server.utils.images import simple_image_handler
 
 model_routes = Blueprint('model_routes', __name__)
 
@@ -24,7 +23,7 @@ def make_file_predict():
     if file and allowed_file(file.filename):
         path = os.path.join('./',  model + str(uuid.uuid1()))
         file.save(path)
-        data = simple_image_handler(path, (96, 96))
+        data = preprocess_image(path)
         payload = generate_input(path, data)
         pred = generate_request(model, payload)
         os.remove(path)
