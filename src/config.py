@@ -1,8 +1,11 @@
-import configparser
 import os
 
-global_config = configparser.ConfigParser()
-global_config.read(os.path.dirname(os.path.abspath(__file__)) + '/config.ini')
-config = global_config[global_config['DEFAULT']['CURRENT_CONFIG']]
+def safe_read_os_env(variable, default=""):
+    return os.environ[variable] if variable in os.environ else default
 
+config = {
+    "model_folder": safe_read_os_env("MODEL_FOLDER", "./models"),
+    "model_sufix": safe_read_os_env("MODEL_SUFIX", "pb"),
+    "tensorflow_serve_url": safe_read_os_env("TENSORFLOW_SERVE_URL", "http://localhost:8501/v1/models/")
+}
 

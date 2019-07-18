@@ -10,6 +10,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def generate_request(model_name, payload):
-    r = requests.post(config['TENSORFLOW_SERVE_URL'] + model_name, json=payload)
+    r = requests.post(config['tensorflow_serve_url'] + model_name, json=payload)
+    print("RES ::::::", r.content.decode('utf8'))
     return json.loads(r.content.decode('utf8').replace("'", '"'))
     
