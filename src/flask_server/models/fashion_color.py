@@ -1,10 +1,6 @@
 import numpy as np
 from PIL import Image
 import itertools
-from keras.applications.mobilenet import preprocess_input as mpi
-from keras.preprocessing.image import img_to_array
-import cv2
-import imutils
 
 labels = ["black", "blue", "dress", "jeans", "red", "shirt"]
 input_size = (96, 96)
@@ -19,10 +15,9 @@ def decode_output(output):
     }
 
 def preprocess_image(path):
-    image = cv2.imread(path)
-    image = cv2.resize(image, (96, 96))
+    image = np.array(Image.open(path).resize(input_size))
     image = image.astype("float") / 255.0
-    image = img_to_array(image)
+    #image = img_to_array(image)
     return np.expand_dims(image, axis=0)
     
 
